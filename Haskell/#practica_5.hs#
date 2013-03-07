@@ -1,0 +1,105 @@
+-- PD 2010-11
+-- 5ª práctica (9 de noviembre)
+-- Departamento de Ciencias de la Computación e I.A.
+-- Universidad de Sevilla
+-- =====================================================================
+
+-- ---------------------------------------------------------------------
+-- Ejercicio 1.1 Redefine por recursión la función
+--    takeWhile :: (a -> Bool) -> [a] -> [a]
+-- tal que (takeWhile p xs) es la lista de los elemento de xs hasta el
+-- primero que no cumple la propiedad p. Por ejemplo,
+--    takeWhile (<7) [2,3,9,4,5]  =>  [2,3]
+-- ---------------------------------------------------------------------
+
+-- La definición es
+takeWhile' :: (a -> Bool) -> [a] -> [a]
+takeWhile' _ [] = [] 
+takeWhile' p (x:xs) = if p x then [x] ++ (takeWhile' p xs) else []
+
+
+-- ---------------------------------------------------------------------
+-- Ejercicio 1.2 Redefinir por recursión la función
+--    dropWhile :: (a -> Bool) -> [a] -> [a]
+-- tal que (dropWhile p xs) es la lista de los elemento de xs eliminando 
+-- hasta el primero que no cumple la propiedad p. Por ejemplo,
+--    dropWhile' (<7) [2,3,9,4,5]  =>  [9,4,5]
+-- ---------------------------------------------------------------------
+
+-- La definición es
+dropWhile' :: (a -> Bool) -> [a] -> [a]
+dropWhile' _ [] = []
+dropWhile' p (x:xs) = if p x then (dropWhile' p xs) else [x] ++ xs
+
+
+-- ---------------------------------------------------------------------
+-- Ejercicio 2. Se considera la función 
+--    filtraAplica :: (a -> b) -> (a -> Bool) -> [a] -> [b]
+-- tal que (filtraAplica f p xs) es la lista obtenida aplicándole a los
+-- elementos de xs que cumplen el predicado p la función f. Por ejemplo,
+--    filtraAplica (4+) (<3) [1..7]  =>  [5,6]
+-- Se pide:
+-- 1. Definir la función usando recursión.
+-- 2. Definir la función usando listas de comprensión.
+-- 3. Definir la función usando map y filter.
+-- ---------------------------------------------------------------------
+
+-- La definicón con recursión es:
+filtraAplica1 :: (a -> b) -> (a -> Bool) -> [a] -> [b]
+filtraAplica1 _ _ [] = []
+filtraAplica1 f p (x:xs) = if p x then [f x] ++ (filtraAplica1 f p xs)
+                           else filtraAplica1 f p xs
+
+-- La definicón con lista de comprensión es:
+filtraAplica2 :: (a -> b) -> (a -> Bool) -> [a] -> [b]
+filtraAplica2 f p xs = [f x|x <- xs, p x]
+
+-- La definicón con map y filter es:
+filtraAplica3 :: (a -> b) -> (a -> Bool) -> [a] -> [b]
+filtraAplica3 f p xs = map f (filter p xs)
+
+
+-- ---------------------------------------------------------------------
+-- Ejercicio 3. Se considera la función
+--    all :: (a -> Bool) -> [a] -> Bool
+-- tal que (all p xs) se verifica si todos los elementos de xs cumplen
+-- la propiedad p. Por ejemplo,
+--    all (<7) [2,3,5]  =>  True
+--    all (<4) [2,3,5]  =>  False
+-- Se pide:
+-- 1. Definir la función usando recursión.
+-- 2. Definir la función usando listas de comprensión.
+-- 3. Definir la función usando filter.
+-- ---------------------------------------------------------------------
+
+-- La definicón con recursión es:
+all1 :: (a -> Bool) -> [a] -> Bool
+all1 _ [] = True
+all1 p (x:xs) | p x = True && (all1 p xs)
+              | otherwise = False
+
+-- La definicón con lista de comprensión es:
+all2 :: (a -> Bool) -> [a] -> Bool
+all2 p xs = and [p x | x <- xs]
+
+-- La definicón con filter es:
+all3 :: (a -> Bool) -> [a] -> Bool
+all3 p xs = length xs == length (filter p xs)
+
+
+-- ---------------------------------------------------------------------
+-- Ejercicio 4. Define la función
+--    dec2ent :: [Int] -> Int
+-- tal que (dec2ent xs) es el entero correspondiente a la expresión
+-- decimal xs. Por ejemplo,
+--    dec2ent [2,3,4,5]  =>  2345
+-- ---------------------------------------------------------------------
+
+dec2ent :: [Int] -> Int
+dec2ent [] = 0
+dec2ent (x:xs) = x*(10^(length xs)) + (dec2ent xs)
+
+-- ----------------------------------------------------------------------
+
+
+
